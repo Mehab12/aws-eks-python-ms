@@ -216,6 +216,7 @@ Access the microservice via the assigned public endpoint.
 2. Add a pipeline for automatic ECR image updates from GitHub commits.
 3. Add a pipeline for Kubernetes deployment triggered by Docker image changes.
 4. Integrate alerting via Grafana/Prometheus for production readiness.
+5. Set up Elasticsearch and Kibana for centralized logging and monitoring of microservices and Kubernetes cluster metrics.
 
 ---
 
