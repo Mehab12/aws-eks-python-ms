@@ -9,7 +9,7 @@ resource "helm_release" "jenkins" {
 
   set {
     name  = "controller.serviceType"
-    value = "LoadBalancer"  # was ClusterIP
+    value = "LoadBalancer"
   }
 
   set {
@@ -25,3 +25,4 @@ resource "helm_release" "jenkins" {
 
   depends_on = [module.eks]
 }
+
