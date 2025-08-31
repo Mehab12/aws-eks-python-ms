@@ -1,0 +1,9 @@
+1.      Clone the Repository: https://github.com/sameh-Tawfiq/Microservices
+2.      Dockerize the Application: Create a Dockerfile to containerize the Python application.
+3.      Provision a Kubernetes Cluster: Use Terraform to provision a Kubernetes cluster on a cloud provider of your choice (e.g., AWS, GCP, Azure) preferred Azure.
+4.      Deploy the Microservice: Deploy the containerized Python microservice on the Kubernetes cluster using Kubernetes YAML files.
+5.      Expose the Service to the Internet: Ensure the deployed service is accessible externally by configuring a Kubernetes LoadBalancer or Ingress of your choice.
+6.      Deployment: Implement a CI/CD pipeline to automate the build and deployment process. Feel free to use any tools you are comfortable with (e.g., GitHub Actions, Jenkins, GitLab CI/CD).
+7.      Monitoring: Implement a monitoring stack for metrics monitoring to monitor the Kubernetes cluster and the application.
+•                 A link to the GitHub repository containing your code, Dockerfile, Terraform files, and Kubernetes YAML files.
+•                 Detailed Readme file on the steps you followed, including any commands used for provisioning, deployment, and exposing the service.
