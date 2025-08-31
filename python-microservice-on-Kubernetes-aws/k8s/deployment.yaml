@@ -2,10 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: python-microservice
-  labels:
-    app: python-microservice
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: python-microservice
@@ -16,41 +14,6 @@ spec:
     spec:
       containers:
       - name: python-microservice
-        image: ${IMAGE}          # Jenkins pipeline will replace this dynamically
+        image: ${IMAGE}
         ports:
         - containerPort: 5000
-        env:
-        - name: FLASK_ENV
-          value: "production"
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 5000
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 5000
-          initialDelaySeconds: 5
-          periodSeconds: 5
-        resources:
-          requests:
-            memory: "64Mi"
-            cpu: "250m"
-          limits:
-            memory: "128Mi"
-            cpu: "500m"
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: python-microservice-service
-spec:
-  selector:
-    app: python-microservice
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 5000
-  type: LoadBalancer
