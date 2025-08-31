@@ -1,0 +1,93 @@
+pipeline {
+    agent any
+
+    parameters {
+        string(name: 'AWS_REGION', defaultValue: 'eu-west-2', description: 'AWS region')
+        string(name: 'CLUSTER_NAME', defaultValue: 'microservice-cluster', description: 'EKS cluster name')
+        string(name: 'ECR_REPO', defaultValue: 'microservice-dev-repo', description: 'ECR repository name')
+        string(name: 'IMAGE_TAG', defaultValue: "${BUILD_NUMBER}", description: 'Docker image tag')
+        string(name: 'AWS_ACCOUNT_ID', defaultValue: '<your_aws_account_id>', description: 'AWS account ID')
+        string(name: 'GIT_REPO', defaultValue: 'https://github.com/your-org/python-microservice.git', description: 'GitHub repository URL')
+        string(name: 'GIT_BRANCH', defaultValue: 'main', description: 'Branch to build')
+    }
+
+    environment {
+        AWS_REGION     = "${params.AWS_REGION}"
+        CLUSTER_NAME   = "${params.CLUSTER_NAME}"
+        ECR_REPO       = "${params.ECR_REPO}"
+        IMAGE_TAG      = "${params.IMAGE_TAG}"
+        AWS_ACCOUNT_ID = "${params.AWS_ACCOUNT_ID}"
+        GIT_REPO       = "${params.GIT_REPO}"
+        GIT_BRANCH     = "${params.GIT_BRANCH}"
+    }
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                git branch: "${GIT_BRANCH}", url: "${GIT_REPO}"
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    docker.build("${ECR_REPO}:${IMAGE_TAG}")
+                }
+            }
+        }
+
+        stage('Login to ECR') {
+            steps {
+                sh '''
+                aws ecr get-login-password --region ${AWS_REGION} \
+                  | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+                '''
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                sh '''
+                docker tag ${ECR_REPO}:${IMAGE_TAG} ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO}:${IMAGE_TAG}
+                docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO}:${IMAGE_TAG}
+                '''
+            }
+        }
+
+        stage('Update kubeconfig') {
+            steps {
+                sh 'aws eks update-kubeconfig --region ${AWS_REGION} --name ${CLUSTER_NAME}'
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    def imageUrl = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO}:${IMAGE_TAG}"
+                    sh """
+                    set -e
+                    export IMAGE=${imageUrl}
+                    envsubst < k8s/deployment.yaml | kubectl apply -f -
+                    kubectl rollout status deployment/python-microservice
+                    """
+                }
+            }
+        }
+
+        stage('Verify Deployment') {
+            steps {
+                sh 'kubectl get pods -l app=python-microservice'
+                sh 'kubectl get svc python-microservice-service'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "Deployment successful! Image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO}:${IMAGE_TAG}"
+        }
+        failure {
+            echo "Pipeline failed!"
+        }
+    }
+}
