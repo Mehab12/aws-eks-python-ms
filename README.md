@@ -13,6 +13,7 @@
 9. [Monitoring](#monitoring)
 10. [Future Enhancements](#future-enhancements)
 11. [References](#references)
+12. [Diagrams](#Diagrams)
 
 ---
 
@@ -228,7 +229,7 @@ Access the microservice via the assigned public endpoint.
 * [Kubernetes Documentation](https://kubernetes.io/docs/home/)
 ---
 
-## Diagram
+## Diagrams
 AWS Diagram 
 
 <img width="1920" height="1056" alt="image" src="https://github.com/user-attachments/assets/8a9e26a7-d2ed-47fd-b20a-fa83905c4162" />
