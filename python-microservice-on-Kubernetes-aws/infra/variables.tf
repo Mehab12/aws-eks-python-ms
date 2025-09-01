@@ -62,7 +62,7 @@ variable "eks_version" {
 variable "node_group_name" {
   description = "Name of the EKS node group"
   type        = string
-  default     = "demo-nodes"
+  default     = "worker-node"
 }
 
 variable "node_instance_type" {
@@ -74,7 +74,7 @@ variable "node_instance_type" {
 variable "node_desired_capacity" {
   description = "Desired number of nodes in the node group"
   type    = number
-  default = 1
+  default = 2
 }
 
 variable "node_min_capacity" {
@@ -86,11 +86,12 @@ variable "node_min_capacity" {
 variable "node_max_capacity" {
   description = "Maximum number of nodes in the node group"
   type    = number
-  default = 1
+  default = 3
 }
 
 variable "single_nat_gateway" {
   description = "Use single NAT gateway for cost optimization"
   type        = bool
   default     = true
+
 }
