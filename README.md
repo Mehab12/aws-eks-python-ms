@@ -226,3 +226,14 @@ Access the microservice via the assigned public endpoint.
 * [Terraform AWS Provider](https://registry.terraform.io/providers/hashicorp/aws/latest/docs)
 * [Jenkins Pipeline Syntax](https://www.jenkins.io/doc/book/pipeline/syntax/)
 * [Kubernetes Documentation](https://kubernetes.io/docs/home/)
+---
+
+## Diagram
+AWS Diagram 
+
+<img width="1920" height="1056" alt="image" src="https://github.com/user-attachments/assets/8a9e26a7-d2ed-47fd-b20a-fa83905c4162" />
+
+CI/CD deployment flow diagram:
+<img width="1920" height="1056" alt="image" src="https://github.com/user-attachments/assets/0cf67ecb-b112-42ab-8790-a914f186b107" />
+
+
